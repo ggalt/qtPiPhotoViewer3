@@ -128,8 +128,9 @@ void imageFiles::readImageURLsFromDisk(QDir d)
             }
         }
     }
-    qDebug() << "Number of photos is:" << photoList.size();
+    qDebug() << "Number of photos is:" << photoUrlList.count();
     qDebug() << "Standard Photo Path is:" << QStandardPaths::displayName(QStandardPaths::HomeLocation)+QStandardPaths::displayName(QStandardPaths::PicturesLocation);
+    qDebug() << "Path given for photos is:" << d;
     imageCount = photoUrlList.count();
 //    qDebug() << imageCount << photoUrlList.at(0);
 }
