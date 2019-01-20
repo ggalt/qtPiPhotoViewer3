@@ -20,11 +20,13 @@ class imageFiles : public QObject
 {
     Q_OBJECT
 public:
-    explicit imageFiles(QObject *parent = 0);
+    explicit imageFiles(QObject *parent = nullptr);
     ~imageFiles(void);
 
     Q_INVOKABLE QString nextImage(void);
     Q_INVOKABLE QString previousImage(void);
+    Q_INVOKABLE QString returnImagePath(void) { return photoUrlList.at(imagesShown.at(imagePointer)); }
+
 
     void ReadURLs(void);
     void setupImageProvider(QQmlEngine *eng);
@@ -38,8 +40,8 @@ private:
 
     QStringList photoUrlList;
     QMultiMap<QString, photoItem*> photoList;
-    int imageCount;
-    int imagePointer;
+    quint32 imageCount;
+    quint32 imagePointer;
     QList<int> imagesShown;
     quint32 newImagesShown[IMAGE_BUF_SIZE];
     int newImagePointer;

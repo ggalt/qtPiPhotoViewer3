@@ -1,4 +1,4 @@
-import QtQuick 2.7
+import QtQuick 2.12
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
@@ -9,6 +9,7 @@ ApplicationWindow {
     visible: true
     width: 1024
     height: 768
+
     property int showImageDuration: 5000    // 5 seconds (5000 milliseconds)
     property int imageFadeDuration: 1000
     property int backgroundTransitionDuration: 300
@@ -18,8 +19,9 @@ ApplicationWindow {
     property real shadowOpacity: 0.5
     property string pictureHome: ""
     property bool movingForward: true
+    property string imagePath: ""
 
-//    visibility: "FullScreen"
+    visibility: "FullScreen"
 
     function toggleFullScreen() {
         // console.log("****VISIBILITY IS:",appWindow.visibility)
@@ -35,14 +37,20 @@ ApplicationWindow {
 
     function loadNextImage() {
         if(movingForward) {
-            mainWindow.nextImage = myImages.nextImage()
+            mainWindow.currentImage = myImages.nextImage()
             // console.log("Next Image")
         }
         else {
-            mainWindow.nextImage = myImages.previousImage()
+            mainWindow.currentImage = myImages.previousImage()
             movingForward = true
             // console.log("****LOADING PREVIOUS IMAGE***")
         }
+        getImagePath()
+    }
+
+    function getImagePath() {
+        imagePath = myImages.returnImagePath()
+        console.log(imagePath)
     }
 
     function imageTimerStart() {
@@ -54,29 +62,8 @@ ApplicationWindow {
 
     function setImageState(imgState) {
 
-        if(imgState==="Initialize") {
+        if(imgState==="BlankImage") {
             mainWindow.state = imgState
-            setImageState("ImageOut")
-        }
-        else if(imgState==="ImageOut") {
-            loadNextImage()
-            mainWindow.state = imgState
-        }
-        else if(imgState==="ImageSwitch") {
-            mainWindow.state = imgState
-            mainWindow.currentImage = mainWindow.nextImage
-        }
-        else if(imgState==="ImageIn") {
-            mainWindow.state = imgState
-        }
-        else if(imgState==="ImageDisplay") {
-            mainWindow.oldImage = mainWindow.currentImage
-            mainWindow.state = imgState
-        }
-        else if(imgState==="ImageInterrupt") {
-            loadNextImage()
-            mainWindow.state = imgState
-//            console.log("state is ImageInterrupt")
         }
         else {
              console.log("HELP!! Unknown image state:", imgState)
@@ -91,7 +78,7 @@ ApplicationWindow {
             movingForward = false
         }
         console.log("Moving Forward:", movingForward, "timer is running?", imageTimer.running)
-        appWindow.setImageState("ImageInterrupt")
+        appWindow.setImageState("BlankImage")
     }
 
     function loadSettingsDialog() {
@@ -104,7 +91,7 @@ ApplicationWindow {
             blurValue = newBlurValue
         if(newDurationValue > 0)
             showImageDuration = newDurationValue * 1000
-        if(newURL!= "") {
+        if(newURL!== "") {
             pictureHome = newURL
         }
     }
@@ -115,7 +102,7 @@ ApplicationWindow {
         running: false
         onTriggered: {
             // console.log("imageTimer triggered")
-            mainWindow.state = "ImageReset"
+            mainWindow.state = "BlankImage"
         }
     }
 
@@ -123,6 +110,31 @@ ApplicationWindow {
         id: mainWindow
         property string currentImage: appWindow.getImage()
         anchors.fill: parent
+
+        focus: true
+        Keys.onLeftPressed: {
+            console.log("left key press")
+            appWindow.goToImage("previous")
+        }
+        Keys.onRightPressed: {
+            console.log("right key press")
+            appWindow.goToImage("next")
+        }
+        Keys.onReturnPressed: {
+            appWindow.toggleFullScreen()
+        }
+
+        Keys.onEscapePressed: {
+            appWindow.close()
+        }
+        Keys.onUpPressed: {
+            console.log("Up Key Press")
+        }
+        Keys.onDownPressed: {
+            getImagePath()
+            mainWindow.setPathState("PathVisible")
+            console.log("Down Key Press"+imagePath)
+        }
     }
 
     MouseArea {
@@ -139,6 +151,5 @@ ApplicationWindow {
             }
         }
     }
-    Keys.onLeftPressed: goToImage("previous")
-    Keys.onRightPressed: goToImage("next")
+
 }

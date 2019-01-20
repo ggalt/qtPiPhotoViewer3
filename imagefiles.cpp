@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QRandomGenerator>
 
 #include "imagefiles.h"
 #include "photoitem.h"
@@ -23,9 +24,9 @@ imageFiles::~imageFiles()
 QString imageFiles::nextImage()
 {
     if( imagePointer == 0) {
-        int randNum = qrand();
+//         quint32 randNum = QRandomGenerator::global()->generate();
 //        qDebug() << "Random number:" << randNum;
-        imagesShown.insert(0, randNum % imageCount);
+        imagesShown.insert(0, QRandomGenerator::global()->bounded(imageCount));
     } else {
         imagePointer--;
         if(imagePointer < 0)
@@ -40,7 +41,7 @@ QString imageFiles::nextImage()
 
 QString imageFiles::previousImage()
 {
-    imagePointer+=2;    // NOT SURE WHY THIS NEEDS TO BE "PLUS 2" BUT IT WORKS
+    imagePointer++;    // NOT SURE WHY THIS NEEDS TO BE "PLUS 2" BUT IT WORKS
     if(imagePointer >= imagesShown.size())
         imagePointer = imagesShown.size()-1;
 
@@ -48,6 +49,14 @@ QString imageFiles::previousImage()
                 imagesShown.at(imagePointer));
 //    qDebug() << imageURL;
     return imageURL;
+//    imagePointer+=2;    // NOT SURE WHY THIS NEEDS TO BE "PLUS 2" BUT IT WORKS
+//    if(imagePointer >= imagesShown.size())
+//        imagePointer = imagesShown.size()-1;
+
+//    QString imageURL = "image://myImageProvider/"+photoUrlList.at(
+//                imagesShown.at(imagePointer));
+////    qDebug() << imageURL;
+//    return imageURL;
 }
 
 void imageFiles::ReadURLs()
@@ -109,7 +118,7 @@ void imageFiles::readImageURLsFromDisk(QDir d)
                 p->setPhotoPath(QDir(it.fileInfo().absoluteDir()));
                 p->setPhotoFileName(it.fileInfo().fileName());
 
-                qDebug() << p->photoFileName() << "--" << p->photoPath() << "--" << p->photoFullPath();
+//                qDebug() << p->photoFileName() << "--" << p->photoPath() << "--" << p->photoFullPath();
 
                 photoUrlList.append(p->photoFullPath().absolutePath());
                 photoList.insert(p->photoFileName(),p);
@@ -117,6 +126,7 @@ void imageFiles::readImageURLsFromDisk(QDir d)
         }
     }
     qDebug() << "Number of photos is:" << photoList.size();
+    qDebug() << "Standard Photo Path is:" << QStandardPaths::displayName(QStandardPaths::HomeLocation)+QStandardPaths::displayName(QStandardPaths::PicturesLocation);
     imageCount = photoUrlList.count();
 //    qDebug() << imageCount << photoUrlList.at(0);
 }

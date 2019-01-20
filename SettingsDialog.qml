@@ -1,5 +1,6 @@
-import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick 2.7
+import QtQuick.Controls 2.0
+import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.2
 
 
@@ -12,9 +13,11 @@ Item {
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
-    property string pictreFolderHome: ""
+    property string pictreFolderHome: appWindow.pictureHome
     property int newBlurValue: appWindow.blurValue
-    property int newDurationValue: appWindow.showImageDuration / 1000
+    property int newDurationValue: appWindow.showImageDuration
+    width: 800
+    height: 600
 
     function acceptNewValues() {
         appWindow.changeSettings(newBlurValue,newDurationValue,pictreFolderHome)
@@ -31,6 +34,8 @@ Item {
         // add a mouse area so that clicks outside
         // the dialog window will not do anything
         MouseArea {
+            width: 800
+            height: 600
             anchors.fill: parent
         }
     }
@@ -52,8 +57,10 @@ Item {
     }
     Rectangle {
         id: dialogWindow
-        width: 320
-        height: 200
+        width: 640
+        height: 480
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -71,73 +78,134 @@ Item {
             }
 
         }
-        anchors.centerIn: parent
 
         Text {
-            id: text1
-            x: 28
-            y: 41
-            width: 114
-            height: 19
+            id: blurText
+            width: 200
+            height: 25
             text: qsTr("Background Blur Value:")
+            anchors.left: parent.left
+            anchors.leftMargin: 30
+            anchors.top: parent.top
+            anchors.topMargin: 40
             font.pointSize: 12
         }
 
-        Button {
-            id: btnAccept
-            x: 28
-            y: 155
-            text: qsTr("Accept")
-            isDefault: true
-            onClicked: {
-                dialogComponent.destroy()
-            }
-        }
-
-        Button {
-            id: btnCancel
-            x: 215
-            y: 155
-            text: qsTr("Cancel")
-            onClicked: {
-                dialogComponent.destroy()
-            }
-        }
-
-        Button {
-            id: btnFolderChooser
-            x: 28
-            y: 106
-            width: 262
-            height: 43
-            text: qsTr("Choose Base Picture Folder")
+        Text {
+            id: imageDurationText
+            x: -9
+            y: -8
+            width: 200
+            height: 25
+            text: qsTr("Image Display Duration:")
+            font.pointSize: 12
+            anchors.topMargin: 10
+            anchors.top: blurText.bottom
+            anchors.leftMargin: 30
+            anchors.left: parent.left
         }
 
         Text {
-            id: text2
-            x: 28
-            y: 72
-            text: qsTr("Image Display Duration:")
-            font.pixelSize: 12
+            id: imageLocationText
+            x: -6
+            y: 0
+            width: 200
+            height: 25
+            text: qsTr("Top-level Image Folder:")
+            font.pointSize: 12
+            anchors.topMargin: 10
+            anchors.top: imageDurationText.bottom
+            anchors.leftMargin: 30
+            anchors.left: parent.left
         }
 
-        SpinBox {
-            id: blurValueSpinner
-            x: 210
-            y: 40
-            width: 80
-            height: 20
-            maximumValue: 300
+        Slider {
+            id: blurSlider
+            height: 25
+            value: newBlurValue
+            from: 0
+            to: 100
+            anchors.verticalCenter: blurText.verticalCenter
+            anchors.leftMargin: 10
+            anchors.left: blurText.right
+            anchors.rightMargin: 5
+            anchors.right: blurValue.left
+            spacing: -2
+            focusPolicy: Qt.WheelFocus
+            stepSize: 5
         }
 
-        SpinBox {
-            id: durationValueSpinner
-            x: 210
-            y: 75
-            width: 80
-            height: 20
+        Text {
+            id: blurValue
+            text: blurSlider.value
+            clip: true
+            textFormat: Text.PlainText
+            font.capitalization: Font.AllLowercase
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: blurText.verticalCenter
+            height: 25
+            width: 40
+            font.pointSize: 12
+            anchors.right: parent.right
+            anchors.rightMargin: 1
         }
 
+        Slider {
+            id: durationSlider
+            height: 25
+            from: 0
+            to: 100000
+            anchors.verticalCenter: imageDurationText.verticalCenter
+            anchors.leftMargin: 10
+            anchors.left: imageDurationText.right
+            anchors.rightMargin: 5
+            anchors.right: durationValue.left
+            spacing: -2
+            focusPolicy: Qt.WheelFocus
+            stepSize: 1000
+            value: newDurationValue
+        }
+
+        Text {
+            id: durationValue
+            text: durationSlider.value/1000
+            clip: true
+            font.capitalization: Font.AllLowercase
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: imageDurationText.verticalCenter
+            height: 25
+            width: 40
+            font.pointSize: 12
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+        }
+
+        Button {
+            id: fileLocationBtn
+            width: 30
+            height: 30
+            //            text: qsTr(". . .")
+            text: qsTr("TEXT")
+            font.pointSize: 20
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            anchors.verticalCenter: imageLocationText.verticalCenter
+            flat: false
+        }
+
+        Text {
+            id: imageFileLocation
+            height: 25
+            text: qsTr("pictreFolderHome")
+            font.pointSize: 12
+            anchors.right: fileLocationBtn.left
+            anchors.rightMargin: 10
+            anchors.left: imageLocationText.right
+            anchors.leftMargin: 10
+            anchors.verticalCenter: imageLocationText.verticalCenter
+        }
     }
 }
 
@@ -189,5 +257,69 @@ Item {
 //            onClicked: settingsDialog.destroy()
 //        }
 //    }
+//Button {
+//    id: btnAccept
+//    x: 28
+//    y: 155
+//    text: qsTr("Accept")
+//    //            isDefault: true
+//    onClicked: {
+//        dialogComponent.destroy()
+//    }
+//}
+
+//Button {
+//    id: btnCancel
+//    x: 215
+//    y: 155
+//    text: qsTr("Cancel")
+//    onClicked: {
+//        dialogComponent.destroy()
+//    }
+//}
+
 
 //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*##^## Designer {
+    D{i:21;anchors_x:225}D{i:5;anchors_height:200;anchors_width:320}
+}
+ ##^##*/

@@ -14,6 +14,10 @@ Rectangle {
         imagePage.state = newState
     }
 
+    function setPathState(pathState) {
+        foregroundImage.state=pathState
+    }
+
     Image {
         id: backgroundImage
         anchors.verticalCenter: parent.verticalCenter
@@ -29,7 +33,7 @@ Rectangle {
         source: backgroundImage
         radius: appWindow.blurValue
         opacity: 0
-//        onOpacityChanged: // console.log("NEW IMAGE BLUR OPACITY CHANGED TO:", newBackgroundBlur.opacity, "state is:", imagePage.state)
+        //        onOpacityChanged: // console.log("NEW IMAGE BLUR OPACITY CHANGED TO:", newBackgroundBlur.opacity, "state is:", imagePage.state)
     }
 
     DropShadow {
@@ -56,6 +60,69 @@ Rectangle {
         opacity: 0
         source: mainWindow.currentImage
         autoTransform: true
+
+        Rectangle {
+            id: recImagePathText
+            height: foregroundImage.height / 30
+            color: "#80ffffff"
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            Text {
+                id: txtImagePath
+                text: qsTr(appWindow.imagePath)
+                anchors.fill: parent
+                styleColor: "#ffffff"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: foregroundImage.height / 40
+                opacity: 1
+            }
+        }
+
+        states: [
+            State {
+                name: "PathVisible"
+                PropertyChanges {
+                    target: recImagePathText
+                    opacity: .90
+                }
+            },
+            State {
+                name: "PathInvisible"
+                PropertyChanges {
+                    target: recImagePathText
+                    opacity: 0
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "*"
+                to: "PathVisible"
+
+                NumberAnimation {
+                    target: recImagePathText
+                    property: "opacity"
+                    duration: 200
+                    easing.type: Easing.InOutQuad
+                }
+            },
+            Transition {
+                from: "*"
+                to: "PathInvisible"
+
+                NumberAnimation {
+                    target: recImagePathText
+                    property: "opacity"
+                    duration: 200
+                    easing.type: Easing.InOutQuad
+                }
+            }
+        ]
     }
 
     states: [
@@ -63,19 +130,11 @@ Rectangle {
             name: "BlankImage"
             PropertyChanges {
                 target: foregroundImage
-                source: "qrc:/images/black.png"
-            }
-            PropertyChanges {
-                target: foregroundImage
-                opacity: 1
+                opacity: 0
             }
             PropertyChanges {
                 target: imageDropShadow
-                opacity: 1
-            }
-            PropertyChanges {
-                target: backgroundImage
-                source: "qrc:/images/black.png"
+                opacity: 0
             }
             PropertyChanges {
                 target: backgroundImage
@@ -85,14 +144,15 @@ Rectangle {
                 target: backgroundBlur
                 opacity: 0
             }
-//            StateChangeScript {
-//                script: {
-//                    name: "InitializeScript"
-//                    // console.log("InitializeScript")
-//                    appWindow.loadNextImage()
-//                    changeState("ImageOut")
-//                }
-//            }
+
+            //            StateChangeScript {
+            //                script: {
+            //                    name: "InitializeScript"
+            //                    // console.log("InitializeScript")
+            //                    appWindow.loadNextImage()
+            //                    changeState("ImageOut")
+            //                }
+            //            }
         },
 
         State {
@@ -116,9 +176,39 @@ Rectangle {
         Transition {
             from: "*"
             to: "BlankImage"
-            ScriptAction {
-                scriptName: "InitializeScript"
+            ParallelAnimation {
+                NumberAnimation {
+                    target: backgroundBlur
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration
+                    easing.type: Easing.OutQuad
+                }
+                NumberAnimation {
+                    target: foregroundImage
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration
+                    easing.type: Easing.OutQuad
+                }
+                NumberAnimation {
+                    target: imageDropShadow
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration
+                    easing.type: Easing.OutQuad
+                }
             }
+
+            onRunningChanged: {
+                if(!running && state=="BlankImage") {
+                    console.log("BlankImage ends")
+                    appWindow.loadNextImage()
+                    changeState("ShowImage")
+                    setPathState("PathInvisible")
+                }
+            }
+
+            //            ScriptAction {
+            //                scriptName: "InitializeScript"
+            //            }
         },
         Transition {
             from: "*"
@@ -134,22 +224,36 @@ Rectangle {
                     target: foregroundImage
                     property: "opacity"
                     duration: appWindow.backgroundTransitionDuration
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.InQuad
                 }
                 NumberAnimation {
                     target: imageDropShadow
                     property: "opacity"
                     duration: appWindow.backgroundTransitionDuration
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.InQuad
                 }
             }
 
             onRunningChanged: {
-                if((state=="ImageOut") && (!running)) {
-                    mainWindow.currentImage = mainWindow.nextImage
-                    changeState("ImageIn")
+                if(!running && state=="ShowImage") {
+                    appWindow.imageTimerStart()
+                    console.log("ShowImage ends")
                 }
             }
-        }
 
+            //            onRunningChanged: {
+            //                if((state=="ShowImage") && (!running)) {
+            //                    mainWindow.currentImage = mainWindow.nextImage
+            //                    changeState("ImageIn")
+            //                }
+            //            }
+        }
+    ]
 }
+
+
+
+/*##^## Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+ ##^##*/
