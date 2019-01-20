@@ -68,8 +68,11 @@ void imageFiles::ReadURLs()
     //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/DSC_3325.jpg");
     //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/P1000417.JPG");
     //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/P1000504.JPG");
+#ifdef Q_PROCESSOR_ARM
+    readImageURLsFromDisk(QDir("/home/alarm/mnt/"));
+#else
     readImageURLsFromDisk(QDir("/home/ggalt/Pictures/"));
-
+#endif  // Q_PROCESSOR_ARM
     //// Main
 //    photoUrlList.append("/home/ggalt/Pictures/2006-Summer/IMG_0430.JPG");
 //    photoUrlList.append("/home/ggalt/Pictures/2006-Summer/IMG_0431.JPG");

@@ -18,6 +18,15 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+#linux {
+#    contains(QMAKE_HOST.arch, arm.*):{
+#        #raspberry's bla bla bla
+
+#    }else{
+#        #...
+#    }
+#}
+
 HEADERS += \
     myimageprovider.h \
     myapplicationwindow.h \
