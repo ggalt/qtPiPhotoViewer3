@@ -18,7 +18,6 @@ imageFiles::imageFiles(QObject *parent) : QObject(parent)
 
 imageFiles::~imageFiles()
 {
-
 }
 
 QString imageFiles::nextImage()
@@ -41,7 +40,7 @@ QString imageFiles::nextImage()
 
 QString imageFiles::previousImage()
 {
-    imagePointer++;    // NOT SURE WHY THIS NEEDS TO BE "PLUS 2" BUT IT WORKS
+    imagePointer++;
     if(imagePointer >= imagesShown.size())
         imagePointer = imagesShown.size()-1;
 
@@ -49,52 +48,22 @@ QString imageFiles::previousImage()
                 imagesShown.at(imagePointer));
 //    qDebug() << imageURL;
     return imageURL;
-//    imagePointer+=2;    // NOT SURE WHY THIS NEEDS TO BE "PLUS 2" BUT IT WORKS
-//    if(imagePointer >= imagesShown.size())
-//        imagePointer = imagesShown.size()-1;
-
-//    QString imageURL = "image://myImageProvider/"+photoUrlList.at(
-//                imagesShown.at(imagePointer));
-////    qDebug() << imageURL;
-//    return imageURL;
 }
 
 void imageFiles::ReadURLs()
 {
     photoUrlList.clear();
 #ifdef Q_OS_LINUX
-    //// Lenovo
-    //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/DSC_3264.jpg");
-    //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/DSC_3325.jpg");
-    //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/P1000417.JPG");
-    //    photoUrlList.append("/home/ggalt/Pictures/2014-summer/P1000504.JPG");
-#ifdef Q_PROCESSOR_ARM
-    readImageURLsFromDisk(QDir("/home/alarm/mnt/"));
-#else
-    readImageURLsFromDisk(QDir("/home/ggalt/Pictures/"));
-#endif  // Q_PROCESSOR_ARM
+    #ifdef Q_PROCESSOR_ARM
+        readImageURLsFromDisk(QDir("/home/alarm/mnt/"));
+    #else
+        readImageURLsFromDisk(QDir("/home/ggalt/Pictures/"));
+    #endif  // Q_PROCESSOR_ARM
     //// Main
-//    photoUrlList.append("/home/ggalt/Pictures/2006-Summer/IMG_0430.JPG");
-//    photoUrlList.append("/home/ggalt/Pictures/2006-Summer/IMG_0431.JPG");
-//    photoUrlList.append("'/home/ggalt/Pictures/2015/Hawaii and California/DSC_0611.JPG'");
-//    photoUrlList.append("/home/ggalt/Pictures/OldPhotos/DSC_0688.JPG");
-//    readImageURLsFromDisk(QDir("/home/ggalt/Pictures/"));
-
-    //    photoUrlList.append("/home/ggalt/Pictures/2013_07_Hawaii/G0010093ww.JPG");
-    //    photoUrlList.append("/home/ggalt/Pictures/2013_07_Hawaii/G0010093.JPG");
-    //    photoUrlList.append("/home/ggalt/Pictures/2013_07_Hawaii/GOPR0116.JPG");
-    //    photoUrlList.append("/home/ggalt/Pictures/2013_07_Hawaii/GOPR0137.JPG");
-    //    photoUrlList.append("/home/ggalt/Pictures/2013_07_Hawaii/GOPR0170.JPG");
 
 #else
     // Windows laptop
-//    photoUrlList.append("C:/Users/ggalt66/Pictures/Desktop Images/DSC_0682");
-//    photoUrlList.append("C:/Users/ggalt66/Pictures/Desktop Images/DSC_0759");
-//    photoUrlList.append("C:/Users/ggalt66/Pictures/Desktop Images/DSC_1656");
-//    photoUrlList.append("C:/Users/ggalt66/Pictures/Desktop Images/DSC_0738");
     readImageURLsFromDisk(QDir("C:/Users/ggalt66/Pictures/"));
-    // Windows Desktop
-//    readImageURLsFromDisk(QDir("C:/Users/George Galt/Pictures"));
 #endif
     imageCount = photoUrlList.size();
 
@@ -133,4 +102,29 @@ void imageFiles::readImageURLsFromDisk(QDir d)
     qDebug() << "Path given for photos is:" << d;
     imageCount = photoUrlList.count();
 //    qDebug() << imageCount << photoUrlList.at(0);
+}
+
+void imageFiles::getExifData(void)
+{
+//    imageDate = "NO DATA";
+//    imageLat= "NO DATA";
+//    imageLong = "NO DATA";
+//    imageLocation = "NO DATA";
+
+//    // load EXIF data from file
+//    ExifData *m_exifData = exif_data_new_from_file( photoUrlList.at(imagesShown.at(imagePointer)).toLatin1().data() );
+
+//    if( !m_exifData ) {
+//        // error, either no data or file was unreadable
+//        qDebug() << "File:" << photoUrlList.at(imagesShown.at(imagePointer)).toLatin1().data() << "has no EXIF data";
+//        return;
+//    }
+
+//    ExifEntry *m_exifEntry = exif_content_get_entry( m_exifData->ifd[EXIF_IFD_0], EXIF_TAG_DATE_TIME);
+//    char buf[1024];
+//    exif_entry_get_value(m_exifEntry, buf, sizeof(buf));
+//    QByteArray b(buf);
+//    if( b.trimmed().length() < 0 )
+//        imageDate = b;
+
 }

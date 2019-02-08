@@ -32,3 +32,5 @@ HEADERS += \
     myapplicationwindow.h \
     imagefiles.h \
     photoitem.h
+
+LIBS += -lexif

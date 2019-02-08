@@ -10,9 +10,11 @@ ApplicationWindow {
     width: 1024
     height: 768
 
-    property int showImageDuration: 5000    // 5 seconds (5000 milliseconds)
-    property int imageFadeDuration: 1000
-    property int backgroundTransitionDuration: 300
+    property int showImageDuration: 5000                // 5 seconds (5000 milliseconds)
+    property int imageFadeDuration: 1000                // 1 second
+    property int backgroundTransitionDuration: 300      // .3 seconds
+    property int showImageLongDuration: 5 * 60 * 1000   // 5 minutes
+    property int showTitleBarDuration: 5 * 1000         // 5 seconds
     property real backgroundOpacity: 0.75
     property int blurValue: 99
     property int shadowOffset: 4
@@ -56,6 +58,19 @@ ApplicationWindow {
     function imageTimerStart() {
         imageTimer.start()
         // console.log("starting image timeer")
+    }
+
+    function imageTimerStop() {
+        imageTimer.stop()
+    }
+
+    function imageLongTimerStart() {
+        imageTimerStop()
+        imageLongTimer.start()
+    }
+
+    function titleBarTimerStop() {
+        titleBarTimer.stop()
     }
 
     // trying to make a simultaneous cross-fade between old and new backgrounds
@@ -106,6 +121,28 @@ ApplicationWindow {
         }
     }
 
+    Timer {
+        id: imageLongTimer
+        interval: showImageLongDuration
+        running: false
+        onTriggered: {
+            console.log("imageLongTimer triggered")
+            stop()
+            mainWindow.state = "BlankImage"
+        }
+    }
+
+    Timer {
+        id: titleBarTimer
+        interval: showTitleBarDuration // 5 seconds
+        running: false
+        onTriggered: {
+            // console.log("imageTimer triggered")
+            mainWindow.setPathState("PathInvisible")
+        }
+    }
+
+
     MainPage {
         id: mainWindow
         property string currentImage: appWindow.getImage()
@@ -129,16 +166,19 @@ ApplicationWindow {
         }
         Keys.onUpPressed: {
             console.log("Up Key Press")
+            imageLongTimerStart()
         }
         Keys.onDownPressed: {
             getImagePath()
             mainWindow.setPathState("PathVisible")
+            titleBarTimer.start()
             console.log("Down Key Press"+imagePath)
         }
     }
 
     MouseArea {
         anchors.fill: parent
+        cursorShape: Qt.BlankCursor
         onDoubleClicked: loadSettingsDialog() //launch settings dialog
         onPressAndHold: appWindow.toggleFullScreen()
         onClicked: {

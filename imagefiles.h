@@ -10,6 +10,10 @@
 #include <QVariant>
 #include <QQmlEngine>
 #include <QMultiMap>
+
+#include <libexif/exif-data.h>
+
+
 #include "photoitem.h"
 
 
@@ -35,6 +39,10 @@ public:
 signals:
 
 public slots:
+
+private:
+    void getExifData(void);
+
 private:
     MyImageProvider *imageProvider;
 
@@ -46,6 +54,11 @@ private:
     quint32 newImagesShown[IMAGE_BUF_SIZE];
     int newImagePointer;
     QDir topDir;
+
+    QString imageDate;
+    QString imageLat;
+    QString imageLong;
+    QString imageLocation;
 };
 
 #endif // IMAGEFILES_H

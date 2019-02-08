@@ -15,6 +15,7 @@ Rectangle {
     }
 
     function setPathState(pathState) {
+        appWindow.titleBarTimerStop()
         foregroundImage.state=pathState
     }
 
