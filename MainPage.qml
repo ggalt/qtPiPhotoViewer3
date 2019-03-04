@@ -8,6 +8,8 @@ Rectangle {
     objectName: "imagePage"
     color: "black"
 
+    property int iClearVerticalBandWidth: (width - ((4* height)/3 ))/2  // width of open bars on left and right that will be clear (assuming no pararama images).
+
     function changeState(newState) {
         // console.log("Current State:", state)
         // console.log("New State:", newState)
@@ -36,6 +38,50 @@ Rectangle {
         opacity: 0
         //        onOpacityChanged: // console.log("NEW IMAGE BLUR OPACITY CHANGED TO:", newBackgroundBlur.opacity, "state is:", imagePage.state)
     }
+
+//    ClockWidget {
+//        id: clockWidget
+//        property int leftBumper: 0
+//        x: 0
+//        y: 0
+
+//        onPositionClock: {
+//            leftBumper = 0
+//            if( Math.random() < 0.5 ) {
+//                leftBumper = parent.width - iClearVerticalBandWidth
+//            }
+//            x = leftBumper + (Math.random() * (iClearVerticalBandWidth - width))
+//            y = Math.random() * (parent.height - height)
+//        }
+
+//        //    /// we assume a standard 4:3 aspect ratio for pictures so this determines the smallest space on the side
+//        //    /// of each picture that will be "blank" and available to display a clock
+//        //    function getBandWidth() {
+
+//        //        if( textMetrics.width <= displayBandWidth /2 )      // if the current clock would only fill less than half the boundary
+//        //            while( textMetrics.width <= displayBandWidth / 2 ) {
+//        //                fontPointSize++;
+//        //            }
+//        //        else if ( textMetrics.width >= (displayBandWidth * 3)/4 ) { // if the current clock would fill more than 3/4 of the boundary.
+//        //            while( textMetrics.width >= (displayBandWidth * 3)/4 ) {
+//        //                fontPointSize--;
+//        //            }
+//        //        }
+//        //        clockMain.width = textMetrics.width + marginValue * 2
+//        //        clockMain.height = textMetrics.height + marginValue * 2
+//        //    }
+
+//        //    function positionClock() {
+//        //        leftBumper = 0
+//        //        if( Math.random() < 0.5 ) {
+//        //            leftBumper = clockMain.parent.width - displayBandWidth
+//        //        }
+//        //        clockMain.left = leftBumper + (Math.random() * (displayBandWidth - clockMain.width))
+//        //        clockMain.top = Math.random() * (clockMain.parent.height - clockMain.height)
+//        //    }
+
+
+//    }
 
     DropShadow {
         id: imageDropShadow
@@ -251,6 +297,8 @@ Rectangle {
         }
     ]
 }
+
+
 
 
 
