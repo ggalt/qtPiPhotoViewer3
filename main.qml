@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.11
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.2
@@ -22,6 +22,7 @@ ApplicationWindow {
     property string pictureHome: ""
     property bool movingForward: true
     property string imagePath: ""
+    property int imageRotation: 0
 
     visibility: "FullScreen"
 
@@ -117,6 +118,7 @@ ApplicationWindow {
         running: false
         onTriggered: {
             // console.log("imageTimer triggered")
+            imageRotation = 0
             mainWindow.state = "BlankImage"
         }
     }
@@ -151,16 +153,17 @@ ApplicationWindow {
         focus: true
         Keys.onLeftPressed: {
             console.log("left key press")
+            imageRotation = 0
             appWindow.goToImage("previous")
         }
         Keys.onRightPressed: {
             console.log("right key press")
+            imageRotation = 0
             appWindow.goToImage("next")
         }
         Keys.onReturnPressed: {
-            appWindow.toggleFullScreen()
+            appWindow.close()
         }
-
         Keys.onEscapePressed: {
             appWindow.close()
         }
@@ -173,6 +176,25 @@ ApplicationWindow {
             mainWindow.setPathState("PathVisible")
             titleBarTimer.start()
             console.log("Down Key Press"+imagePath)
+        }
+        Keys.onDigit7Pressed: {
+            // rotate left
+            console.log("7 Pressed")
+            imageRotation = 270
+            mainWindow.state = "QuickBlank"
+        }
+        Keys.onDigit9Pressed: {
+            // rotate right
+            console.log("9 Pressed")
+            imageRotation = 90
+            mainWindow.state = "QuickBlank"
+        }
+        Keys.onDigit5Pressed: {
+            appWindow.toggleFullScreen()
+        }
+        Keys.onBackPressed: {
+            appWindow.toggleFullScreen()
+
         }
     }
 

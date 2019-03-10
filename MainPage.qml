@@ -28,6 +28,7 @@ Rectangle {
         source: mainWindow.currentImage
         autoTransform: true
         opacity: 0
+        rotation: appWindow.imageRotation
     }
 
     FastBlur {
@@ -36,52 +37,9 @@ Rectangle {
         source: backgroundImage
         radius: appWindow.blurValue
         opacity: 0
+        rotation: appWindow.imageRotation
         //        onOpacityChanged: // console.log("NEW IMAGE BLUR OPACITY CHANGED TO:", newBackgroundBlur.opacity, "state is:", imagePage.state)
     }
-
-//    ClockWidget {
-//        id: clockWidget
-//        property int leftBumper: 0
-//        x: 0
-//        y: 0
-
-//        onPositionClock: {
-//            leftBumper = 0
-//            if( Math.random() < 0.5 ) {
-//                leftBumper = parent.width - iClearVerticalBandWidth
-//            }
-//            x = leftBumper + (Math.random() * (iClearVerticalBandWidth - width))
-//            y = Math.random() * (parent.height - height)
-//        }
-
-//        //    /// we assume a standard 4:3 aspect ratio for pictures so this determines the smallest space on the side
-//        //    /// of each picture that will be "blank" and available to display a clock
-//        //    function getBandWidth() {
-
-//        //        if( textMetrics.width <= displayBandWidth /2 )      // if the current clock would only fill less than half the boundary
-//        //            while( textMetrics.width <= displayBandWidth / 2 ) {
-//        //                fontPointSize++;
-//        //            }
-//        //        else if ( textMetrics.width >= (displayBandWidth * 3)/4 ) { // if the current clock would fill more than 3/4 of the boundary.
-//        //            while( textMetrics.width >= (displayBandWidth * 3)/4 ) {
-//        //                fontPointSize--;
-//        //            }
-//        //        }
-//        //        clockMain.width = textMetrics.width + marginValue * 2
-//        //        clockMain.height = textMetrics.height + marginValue * 2
-//        //    }
-
-//        //    function positionClock() {
-//        //        leftBumper = 0
-//        //        if( Math.random() < 0.5 ) {
-//        //            leftBumper = clockMain.parent.width - displayBandWidth
-//        //        }
-//        //        clockMain.left = leftBumper + (Math.random() * (displayBandWidth - clockMain.width))
-//        //        clockMain.top = Math.random() * (clockMain.parent.height - clockMain.height)
-//        //    }
-
-
-//    }
 
     DropShadow {
         id: imageDropShadow
@@ -94,6 +52,7 @@ Rectangle {
         color: "#80000000"
         source: foregroundImage
         opacity: 0
+        rotation: appWindow.imageRotation
     }
 
     Image {
@@ -107,6 +66,7 @@ Rectangle {
         opacity: 0
         source: mainWindow.currentImage
         autoTransform: true
+        rotation: appWindow.imageRotation
 
         Rectangle {
             id: recImagePathText
@@ -203,6 +163,26 @@ Rectangle {
         },
 
         State {
+            name: "QuickBlank"
+            PropertyChanges {
+                target: foregroundImage
+                opacity: 0
+            }
+            PropertyChanges {
+                target: imageDropShadow
+                opacity: 0
+            }
+            PropertyChanges {
+                target: backgroundImage
+                opacity: 0
+            }
+            PropertyChanges {
+                target: backgroundBlur
+                opacity: 0
+            }
+        },
+
+        State {
             name: "ShowImage"
             PropertyChanges {
                 target: backgroundBlur
@@ -250,6 +230,41 @@ Rectangle {
                     appWindow.loadNextImage()
                     changeState("ShowImage")
                     setPathState("PathInvisible")
+                }
+            }
+
+            //            ScriptAction {
+            //                scriptName: "InitializeScript"
+            //            }
+        },
+        Transition {
+            from: "*"
+            to: "QuickBlank"
+            ParallelAnimation {
+                NumberAnimation {
+                    target: backgroundBlur
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration/4
+                    easing.type: Easing.OutQuad
+                }
+                NumberAnimation {
+                    target: foregroundImage
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration/4
+                    easing.type: Easing.OutQuad
+                }
+                NumberAnimation {
+                    target: imageDropShadow
+                    property: "opacity"
+                    duration: appWindow.backgroundTransitionDuration/4
+                    easing.type: Easing.OutQuad
+                }
+            }
+
+            onRunningChanged: {
+                if(!running && state=="QuickBlank") {
+                    console.log("QuickBlank ends")
+                    changeState("ShowImage")
                 }
             }
 
