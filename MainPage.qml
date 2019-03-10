@@ -228,6 +228,7 @@ Rectangle {
                 if(!running && state=="BlankImage") {
                     console.log("BlankImage ends")
                     appWindow.loadNextImage()
+                    appWindow.imageRotation = 0
                     changeState("ShowImage")
                     setPathState("PathInvisible")
                 }

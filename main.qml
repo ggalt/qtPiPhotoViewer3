@@ -57,7 +57,8 @@ ApplicationWindow {
     }
 
     function imageTimerStart() {
-        imageTimer.start()
+        imageTimer.restart()
+//        imageTimer.start()
         // console.log("starting image timeer")
     }
 
@@ -118,7 +119,7 @@ ApplicationWindow {
         running: false
         onTriggered: {
             // console.log("imageTimer triggered")
-            imageRotation = 0
+//            imageRotation = 0
             mainWindow.state = "BlankImage"
         }
     }
@@ -180,13 +181,13 @@ ApplicationWindow {
         Keys.onDigit7Pressed: {
             // rotate left
             console.log("7 Pressed")
-            imageRotation = 270
+            imageRotation -= 90
             mainWindow.state = "QuickBlank"
         }
         Keys.onDigit9Pressed: {
             // rotate right
             console.log("9 Pressed")
-            imageRotation = 90
+            imageRotation += 90
             mainWindow.state = "QuickBlank"
         }
         Keys.onDigit5Pressed: {
