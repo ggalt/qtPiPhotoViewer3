@@ -154,47 +154,89 @@ ApplicationWindow {
         anchors.fill: parent
 
         focus: true
-        Keys.onLeftPressed: {
-            console.log("left key press")
-            imageRotation = 0
-            appWindow.goToImage("previous")
+        Keys.onPressed: {
+            console.log("KEY:", event.key)
+            if(event.key === 16777233 || event.key === 49) {
+                console.log("Key-1 or End")
+            } else if(event.key === 16777237 || event.key === 50) {
+                console.log("Key-2 or Down")
+                getImagePath()
+                mainWindow.setPathState("PathVisible")
+                titleBarTimer.start()
+            } else if(event.key === 16777239 || event.key === 51) {
+                console.log("Key-3 or PageDown")
+            } else if(event.key === 16777234 || event.key === 52) {
+                console.log("Key-4 or Left")
+                imageRotation = 0
+                appWindow.goToImage("previous")
+            } else if(event.key === 16777227 || event.key === 53) {
+                console.log("Key-5")
+                appWindow.toggleFullScreen()
+            } else if(event.key === 16777236 || event.key === 54) {
+                console.log("Key-6 or Right")
+                imageRotation = 0
+                appWindow.goToImage("next")
+            } else if(event.key === 16777232 || event.key === 55) {
+                console.log("Key-7 or Home")
+                // rotate left
+                console.log("7 Pressed")
+                imageRotation -= 90
+                mainWindow.state = "QuickBlank"
+            } else if(event.key === 16777235 || event.key === 56) {
+                console.log("Key-8 or Up")
+                imageLongTimerStart()
+            } else if(event.key === 16777238 || event.key === 57) {
+                console.log("Key-9 or PageUp")
+                // rotate right
+                imageRotation += 90
+                mainWindow.state = "QuickBlank"
+            } else if(event.key === 16777221) {
+                console.log("Key-Return")
+                appWindow.close()
+            }
         }
-        Keys.onRightPressed: {
-            console.log("right key press")
-            imageRotation = 0
-            appWindow.goToImage("next")
-        }
-        Keys.onReturnPressed: {
-            appWindow.close()
-        }
+
+//        Keys.onLeftPressed: {
+//            console.log("left key press")
+//            imageRotation = 0
+//            appWindow.goToImage("previous")
+//        }
+//        Keys.onRightPressed: {
+//            console.log("right key press")
+//            imageRotation = 0
+//            appWindow.goToImage("next")
+//        }
+//        Keys.onReturnPressed: {
+//            appWindow.close()
+//        }
         Keys.onEscapePressed: {
             appWindow.close()
         }
-        Keys.onUpPressed: {
-            console.log("Up Key Press")
-            imageLongTimerStart()
-        }
-        Keys.onDownPressed: {
-            getImagePath()
-            mainWindow.setPathState("PathVisible")
-            titleBarTimer.start()
-            console.log("Down Key Press"+imagePath)
-        }
-        Keys.onDigit7Pressed: {
-            // rotate left
-            console.log("7 Pressed")
-            imageRotation -= 90
-            mainWindow.state = "QuickBlank"
-        }
-        Keys.onDigit9Pressed: {
-            // rotate right
-            console.log("9 Pressed")
-            imageRotation += 90
-            mainWindow.state = "QuickBlank"
-        }
-        Keys.onDigit5Pressed: {
-            appWindow.toggleFullScreen()
-        }
+//        Keys.onUpPressed: {
+//            console.log("Up Key Press")
+//            imageLongTimerStart()
+//        }
+//        Keys.onDownPressed: {
+//            getImagePath()
+//            mainWindow.setPathState("PathVisible")
+//            titleBarTimer.start()
+//            console.log("Down Key Press"+imagePath)
+//        }
+//        Keys.onDigit7Pressed: {
+//            // rotate left
+//            console.log("7 Pressed")
+//            imageRotation -= 90
+//            mainWindow.state = "QuickBlank"
+//        }
+//        Keys.onDigit9Pressed: {
+//            // rotate right
+//            console.log("9 Pressed")
+//            imageRotation += 90
+//            mainWindow.state = "QuickBlank"
+//        }
+//        Keys.onDigit5Pressed: {
+//            appWindow.toggleFullScreen()
+//        }
         Keys.onBackPressed: {
             appWindow.toggleFullScreen()
 
