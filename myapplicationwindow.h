@@ -15,14 +15,16 @@ class myApplicationWindow : public QObject
 {
     Q_OBJECT
 public:
-    explicit myApplicationWindow(QObject *parent = 0);
+    explicit myApplicationWindow(QObject *parent = nullptr);
     ~myApplicationWindow(void);
 
     void Init(void);
+    Q_INVOKABLE void setCursorPos(int x, int y);
 
 signals:
 
 public slots:
+//    void setCursorPos(int x, int y);
 
 private:
     QQmlApplicationEngine engine;

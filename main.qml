@@ -24,6 +24,7 @@ ApplicationWindow {
     property string imagePath: ""
     property int imageRotation: 0
 
+
     visibility: "FullScreen"
 
     function toggleFullScreen() {
@@ -57,6 +58,7 @@ ApplicationWindow {
     }
 
     function imageTimerStart() {
+        myAppWindow.setCursorPos(width/2, height/2)
         imageTimer.restart()
 //        imageTimer.start()
         // console.log("starting image timeer")

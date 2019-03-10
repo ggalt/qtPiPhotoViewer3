@@ -4,6 +4,7 @@
 #include <QSettings>
 #include <QVariant>
 #include <QQuickView>
+#include <QCursor>
 
 #define DISPLAY_DURATION    10 * 1000
 #define TRANSITION_DURATION 4 * 1000
@@ -47,6 +48,7 @@ void myApplicationWindow::Init()
     myImages->readImageURLsFromDisk(d);
 //    myImages->ReadURLs();
     engine.rootContext()->setContextProperty("myImages", myImages);
+    engine.rootContext()->setContextProperty("myAppWindow", this);
     appWindow->setProperty("showImageDuration", displayDuration);
     appWindow->setProperty("transitionDuration", transitionDuration);
     appWindow->setProperty("blurValue",blurValue);
@@ -60,3 +62,8 @@ void myApplicationWindow::Init()
             Q_ARG(QVariant, msg));
 }
 
+void myApplicationWindow::setCursorPos(int x, int y)
+{
+    QCursor c;
+    c.setPos(x,y);
+}
