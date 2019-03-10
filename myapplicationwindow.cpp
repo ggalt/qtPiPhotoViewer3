@@ -65,5 +65,6 @@ void myApplicationWindow::Init()
 void myApplicationWindow::setCursorPos(int x, int y)
 {
     QCursor c;
+    c.setPos(0,0);
     c.setPos(x,y);
 }
