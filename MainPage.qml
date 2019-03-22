@@ -18,7 +18,12 @@ Rectangle {
 
     function setPathState(pathState) {
         appWindow.titleBarTimerStop()
-        foregroundImage.state=pathState
+        recImagePathText.state=pathState
+    }
+
+    function setCounterState(counterState) {
+        appWindow.counterTimerStop()
+        recNumberCounter.state=counterState
     }
 
     Image {
@@ -68,6 +73,75 @@ Rectangle {
         autoTransform: true
         rotation: appWindow.imageRotation
 
+    }
+
+    Image {
+        id: infoWindow
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.fill: parent
+
+        Rectangle {
+            id: recNumberCounter
+            anchors.centerIn: parent
+            height: parent.height/2
+            color: "#00000000"
+            border.color: "#00000000"
+            width: parent.width/2
+
+            Text {
+                id: txtNumberCounter
+                color: "#ffffff"
+                text: showImageDuration/1000
+                font.pixelSize: height/2
+                anchors.fill: parent
+                styleColor: "#ffffff"
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                opacity: 0
+            }
+            states: [
+                State {
+                    name: "counterVisible"
+                    PropertyChanges {
+                        target: txtNumberCounter
+                        opacity: 0.75
+                    }
+                },
+                State {
+                    name: "counterInvisible"
+                    PropertyChanges {
+                        target: txtNumberCounter
+                        opacity: 0.0
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    from: "*"
+                    to: "counterVisible"
+
+                    NumberAnimation {
+                        target: txtNumberCounter
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                },
+                Transition {
+                    from: "*"
+                    to: "counterInvisible"
+
+                    NumberAnimation {
+                        target: txtNumberCounter
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            ]
+        }
+
         Rectangle {
             id: recImagePathText
             height: foregroundImage.height / 30
@@ -88,48 +162,48 @@ Rectangle {
                 font.pixelSize: foregroundImage.height / 40
                 opacity: 1
             }
+
+            states: [
+                State {
+                    name: "PathVisible"
+                    PropertyChanges {
+                        target: recImagePathText
+                        opacity: .90
+                    }
+                },
+                State {
+                    name: "PathInvisible"
+                    PropertyChanges {
+                        target: recImagePathText
+                        opacity: 0
+                    }
+                }
+            ]
+            transitions: [
+                Transition {
+                    from: "*"
+                    to: "PathVisible"
+
+                    NumberAnimation {
+                        target: recImagePathText
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                },
+                Transition {
+                    from: "*"
+                    to: "PathInvisible"
+
+                    NumberAnimation {
+                        target: recImagePathText
+                        property: "opacity"
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            ]
         }
-
-        states: [
-            State {
-                name: "PathVisible"
-                PropertyChanges {
-                    target: recImagePathText
-                    opacity: .90
-                }
-            },
-            State {
-                name: "PathInvisible"
-                PropertyChanges {
-                    target: recImagePathText
-                    opacity: 0
-                }
-            }
-        ]
-        transitions: [
-            Transition {
-                from: "*"
-                to: "PathVisible"
-
-                NumberAnimation {
-                    target: recImagePathText
-                    property: "opacity"
-                    duration: 200
-                    easing.type: Easing.InOutQuad
-                }
-            },
-            Transition {
-                from: "*"
-                to: "PathInvisible"
-
-                NumberAnimation {
-                    target: recImagePathText
-                    property: "opacity"
-                    duration: 200
-                    easing.type: Easing.InOutQuad
-                }
-            }
-        ]
     }
 
     states: [

@@ -15,6 +15,7 @@ ApplicationWindow {
     property int backgroundTransitionDuration: 300      // .3 seconds
     property int showImageLongDuration: 5 * 60 * 1000   // 5 minutes
     property int showTitleBarDuration: 5 * 1000         // 5 seconds
+    property int showCounterDuration: 2*1000            // 2 seconds
     property real backgroundOpacity: 0.75
     property int blurValue: 99
     property int shadowOffset: 4
@@ -75,6 +76,10 @@ ApplicationWindow {
 
     function titleBarTimerStop() {
         titleBarTimer.stop()
+    }
+
+    function counterTimerStop() {
+        counterTimer.stop()
     }
 
     // trying to make a simultaneous cross-fade between old and new backgrounds
@@ -147,6 +152,15 @@ ApplicationWindow {
         }
     }
 
+    Timer {
+        id: counterTimer
+        interval: showCounterDuration
+        running: false
+        onTriggered: {
+            mainWindow.setCounterState("counterInvisible")
+        }
+    }
+
 
     MainPage {
         id: mainWindow
@@ -193,6 +207,22 @@ ApplicationWindow {
             } else if(event.key === 16777221) {
                 console.log("Key-Return")
                 appWindow.close()
+            } else if(event.key === 45) {
+                console.log("Minus Key")
+                showImageDuration -= (5*1000)
+                if(showImageDuration < (5*1000))
+                    showImageDuration = (5*1000)
+                console.log("Image Show Duration:", showImageDuration/1000)
+                mainWindow.setCounterState("counterVisible")
+                counterTimer.restart()
+            } else if(event.key === 43) {
+                console.log("Plus Key")
+                showImageDuration += (5*1000)
+                if(showImageDuration > (60*1000))
+                    showImageDuration = (60*1000)
+                console.log("Image Show Duration:", showImageDuration/1000)
+                mainWindow.setCounterState("counterVisible")
+                counterTimer.restart()
             }
         }
 
