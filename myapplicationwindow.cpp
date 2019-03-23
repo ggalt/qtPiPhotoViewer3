@@ -17,7 +17,12 @@ myApplicationWindow::myApplicationWindow(QObject *parent) : QObject(parent)
 
 myApplicationWindow::~myApplicationWindow()
 {
+#ifdef Q_OS_WIN
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                       "GeorgeGalt", "qtPiPhotoViewer3");
+#else
     QSettings settings;
+#endif
     settings.setValue("blurValue", QVariant(blurValue));
     settings.setValue("displayDuration", QVariant(displayDuration));
     settings.setValue("pictureDirectory", QVariant(pictureDirectory));
@@ -30,7 +35,13 @@ void myApplicationWindow::Init()
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     appWindow = engine.rootObjects().first();
 
+#ifdef Q_OS_WIN
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,
+                       "GeorgeGalt", "qtPiPhotoViewer3");
+#else
     QSettings settings;
+#endif
+
     QString pictureHomeDir = QStandardPaths::standardLocations(
                 QStandardPaths::PicturesLocation).first();
 

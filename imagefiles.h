@@ -11,8 +11,6 @@
 #include <QQmlEngine>
 #include <QMultiMap>
 
-#include <libexif/exif-data.h>
-
 
 #include "photoitem.h"
 
