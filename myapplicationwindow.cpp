@@ -45,10 +45,23 @@ void myApplicationWindow::Init()
     QString pictureHomeDir = QStandardPaths::standardLocations(
                 QStandardPaths::PicturesLocation).first();
 
+   if( settings.contains("pictureDirectory")) {
+        qDebug() << "No picture Directory available, we should ask for one";
+        // load QML File Dialog and select directory
+        QVariant returnedValue;
+        QVariant msg = pictureHomeDir;
+        QMetaObject::invokeMethod(appWindow, "selectPhotoDirectory",
+                Q_RETURN_ARG(QVariant, returnedValue),
+                Q_ARG(QVariant, msg));
+        qDebug() << "Returned value:" << returnedValue;
+        pictureDirectory = settings.value("pictureDirectory", pictureHomeDir).toString();
+   } else {
+        pictureDirectory = settings.value("pictureDirectory", pictureHomeDir).toString();
+    }
+
     blurValue = settings.value("blurValue",BLUR_VALUE).toInt();
     displayDuration = settings.value("displayDuration", DISPLAY_DURATION).toInt();
     transitionDuration = settings.value("transitionDuration", TRANSITION_DURATION).toInt();
-    pictureDirectory = settings.value("pictureDirectory", pictureHomeDir).toString();
 //    QQuickView *v = new QQuickView(&engine,0);
 //    v->setScreen();
 

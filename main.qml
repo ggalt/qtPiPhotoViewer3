@@ -120,6 +120,14 @@ ApplicationWindow {
         }
     }
 
+    function selectPhotoDirectory( startingDirectory ) {
+        console.log("Starting Directory:", startingDirectory)
+        photoDialog.folder = startingDirectory
+        photoDialog.open()
+        console.log("Returned directory:", photoDialog.fileUrl)
+        return photoDialog.fileUrl
+    }
+
     Timer {
         id: imageTimer
         interval: showImageDuration
@@ -287,6 +295,10 @@ ApplicationWindow {
                 goToImage("next")
             }
         }
+    }
+
+    PhotoDirectoryDialog {
+        id: photoDialog
     }
 
 }
