@@ -270,6 +270,15 @@ Rectangle {
                 target: imageDropShadow
                 opacity: appWindow.shadowOpacity
             }
+        },
+
+        State {
+            name: "WaitingState"
+            PropertyChanges {
+                target: backgroundImage
+                source: "images/black.png"
+                opacity: 1.0
+            }
         }
     ]
 
@@ -387,6 +396,8 @@ Rectangle {
         }
     ]
 }
+
+
 
 
 

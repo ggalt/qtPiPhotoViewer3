@@ -77,7 +77,16 @@ void imageFiles::setupImageProvider(QQmlEngine *eng)
 
 void imageFiles::readImageURLsFromDisk(QDir d)
 {
-//    qDebug() << "Image URL:" << d;
+    QString pictureHomeDir = QStandardPaths::standardLocations(
+                QStandardPaths::PicturesLocation).first();
+
+
+    if(!d.isReadable()) {
+        qDebug() << "There is some problem with the path we've been sent!!" << d;
+        d = QDir(pictureHomeDir);
+    }
+
+    d = QDir(pictureHomeDir);
     photoUrlList.clear();
     QDirIterator it(d, QDirIterator::Subdirectories);
     while (it.hasNext()) {
@@ -97,8 +106,11 @@ void imageFiles::readImageURLsFromDisk(QDir d)
             }
         }
     }
+
+
+
     qDebug() << "Number of photos is:" << photoUrlList.count();
-    qDebug() << "Standard Photo Path is:" << QStandardPaths::displayName(QStandardPaths::HomeLocation)+QStandardPaths::displayName(QStandardPaths::PicturesLocation);
+    qDebug() << "Standard Photo Path is:" << pictureHomeDir;
     qDebug() << "Path given for photos is:" << d;
     imageCount = photoUrlList.count();
 //    qDebug() << imageCount << photoUrlList.at(0);

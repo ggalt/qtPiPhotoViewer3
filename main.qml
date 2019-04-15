@@ -28,6 +28,8 @@ ApplicationWindow {
 
     visibility: "FullScreen"
 
+    signal fileDialogDone(string newDir)
+
     function toggleFullScreen() {
         // console.log("****VISIBILITY IS:",appWindow.visibility)
         if(appWindow.visibility===5)
@@ -61,7 +63,7 @@ ApplicationWindow {
     function imageTimerStart() {
         myAppWindow.setCursorPos(width/2, height/2)
         imageTimer.restart()
-//        imageTimer.start()
+        //        imageTimer.start()
         // console.log("starting image timeer")
     }
 
@@ -85,13 +87,7 @@ ApplicationWindow {
     // trying to make a simultaneous cross-fade between old and new backgrounds
 
     function setImageState(imgState) {
-
-        if(imgState==="BlankImage") {
-            mainWindow.state = imgState
-        }
-        else {
-             console.log("HELP!! Unknown image state:", imgState)
-        }
+        mainWindow.state = imgState
     }
 
     function goToImage(direction) {
@@ -123,6 +119,7 @@ ApplicationWindow {
     function selectPhotoDirectory( startingDirectory ) {
         console.log("Starting Directory:", startingDirectory)
         photoDialog.folder = startingDirectory
+        console.log("opening")
         photoDialog.open()
         console.log("Returned directory:", photoDialog.fileUrl)
         return photoDialog.fileUrl
@@ -134,7 +131,7 @@ ApplicationWindow {
         running: false
         onTriggered: {
             // console.log("imageTimer triggered")
-//            imageRotation = 0
+            //            imageRotation = 0
             mainWindow.state = "BlankImage"
         }
     }
@@ -234,47 +231,47 @@ ApplicationWindow {
             }
         }
 
-//        Keys.onLeftPressed: {
-//            console.log("left key press")
-//            imageRotation = 0
-//            appWindow.goToImage("previous")
-//        }
-//        Keys.onRightPressed: {
-//            console.log("right key press")
-//            imageRotation = 0
-//            appWindow.goToImage("next")
-//        }
-//        Keys.onReturnPressed: {
-//            appWindow.close()
-//        }
+        //        Keys.onLeftPressed: {
+        //            console.log("left key press")
+        //            imageRotation = 0
+        //            appWindow.goToImage("previous")
+        //        }
+        //        Keys.onRightPressed: {
+        //            console.log("right key press")
+        //            imageRotation = 0
+        //            appWindow.goToImage("next")
+        //        }
+        //        Keys.onReturnPressed: {
+        //            appWindow.close()
+        //        }
         Keys.onEscapePressed: {
             appWindow.close()
         }
-//        Keys.onUpPressed: {
-//            console.log("Up Key Press")
-//            imageLongTimerStart()
-//        }
-//        Keys.onDownPressed: {
-//            getImagePath()
-//            mainWindow.setPathState("PathVisible")
-//            titleBarTimer.start()
-//            console.log("Down Key Press"+imagePath)
-//        }
-//        Keys.onDigit7Pressed: {
-//            // rotate left
-//            console.log("7 Pressed")
-//            imageRotation -= 90
-//            mainWindow.state = "QuickBlank"
-//        }
-//        Keys.onDigit9Pressed: {
-//            // rotate right
-//            console.log("9 Pressed")
-//            imageRotation += 90
-//            mainWindow.state = "QuickBlank"
-//        }
-//        Keys.onDigit5Pressed: {
-//            appWindow.toggleFullScreen()
-//        }
+        //        Keys.onUpPressed: {
+        //            console.log("Up Key Press")
+        //            imageLongTimerStart()
+        //        }
+        //        Keys.onDownPressed: {
+        //            getImagePath()
+        //            mainWindow.setPathState("PathVisible")
+        //            titleBarTimer.start()
+        //            console.log("Down Key Press"+imagePath)
+        //        }
+        //        Keys.onDigit7Pressed: {
+        //            // rotate left
+        //            console.log("7 Pressed")
+        //            imageRotation -= 90
+        //            mainWindow.state = "QuickBlank"
+        //        }
+        //        Keys.onDigit9Pressed: {
+        //            // rotate right
+        //            console.log("9 Pressed")
+        //            imageRotation += 90
+        //            mainWindow.state = "QuickBlank"
+        //        }
+        //        Keys.onDigit5Pressed: {
+        //            appWindow.toggleFullScreen()
+        //        }
         Keys.onBackPressed: {
             appWindow.toggleFullScreen()
 
@@ -299,6 +296,10 @@ ApplicationWindow {
 
     PhotoDirectoryDialog {
         id: photoDialog
+        onAccepted: {
+            console.log("accepted with file director:", photoDialog.fileUrl)
+            fileDialogDone(photoDialog.fileUrl)
+        }
     }
 
 }

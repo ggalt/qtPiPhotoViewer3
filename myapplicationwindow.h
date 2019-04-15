@@ -25,6 +25,10 @@ signals:
 
 public slots:
 //    void setCursorPos(int x, int y);
+    void loadMainWindow(QString newDir);
+
+private:
+    void setUiState( QString state );
 
 private:
     QQmlApplicationEngine engine;
@@ -35,6 +39,7 @@ private:
     int blurValue;
     int displayDuration;
     int transitionDuration;
+    QVariant returnVal;
 
     imageFiles *myImages;
 };

@@ -6,15 +6,16 @@ FileDialog {
     title: "Please choose a Directory"
     selectFolder: true
 
+
     onAccepted: {
-        console.log("You chose: " + fileDialog.fileUrls)
+        console.log("You chose: " + fileUrls)
         close()
 //        Qt.quit()
     }
     onRejected: {
         console.log("Canceled")
-        close()
-//        Qt.quit()
+//        close()
+        Qt.quit()
     }
 //    Component.onCompleted: visible = true
 }
